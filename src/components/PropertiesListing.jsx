@@ -49,7 +49,7 @@ function PropertiesListing({
                         <button
                             type="button"
                             onClick={() => scrollCarousel(-1)}
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[var(--brand-color)]/30 hover:text-[var(--brand-color)]"
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all md:hover:-translate-y-0.5 md:hover:border-[var(--brand-color)]/30 md:hover:text-[var(--brand-color)]"
                             aria-label="Ver propiedades anteriores"
                         >
                             <ChevronLeft size={18} />
@@ -57,7 +57,7 @@ function PropertiesListing({
                         <button
                             type="button"
                             onClick={() => scrollCarousel(1)}
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all hover:-translate-y-0.5 hover:border-[var(--brand-color)]/30 hover:text-[var(--brand-color)]"
+                            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm transition-all md:hover:-translate-y-0.5 md:hover:border-[var(--brand-color)]/30 md:hover:text-[var(--brand-color)]"
                             aria-label="Ver más propiedades"
                         >
                             <ChevronRight size={18} />
@@ -102,7 +102,7 @@ function PropertiesListing({
                 <div className="mt-8 flex flex-col items-center gap-3">
                     <a
                         href={viewAllHref}
-                        className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-color)] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all hover:-translate-y-0.5 hover:bg-[var(--brand-dark-color)] hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-color)]/50 focus-visible:ring-offset-2"
+                        className="inline-flex items-center justify-center rounded-xl bg-[var(--brand-color)] px-6 py-3 text-sm font-semibold text-white shadow-md transition-all md:hover:-translate-y-0.5 md:hover:bg-[var(--brand-dark-color)] md:hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--brand-color)]/50 focus-visible:ring-offset-2"
                     >
                         {viewAllLabel}
                     </a>

@@ -15,7 +15,7 @@ function ProductCard({ product, whatsappHref }) {
   const operationText = product.operacion.charAt(0).toUpperCase() + product.operacion.slice(1)
 
   return (
-    <article className="group min-h-[465px] relative flex flex-col overflow-hidden rounded-2xl border border-[var(--brand-color)]/15 bg-white shadow-md transition-all duration-500 hover:-translate-y-2 hover:border-[var(--brand-color)]/40 hover:shadow-xl hover:shadow-[var(--brand-color)]/15 focus-within:-translate-y-2 focus-within:border-[var(--brand-color)]/40 focus-within:shadow-xl focus-within:shadow-[var(--brand-color)]/20">
+    <article className="group min-h-[465px] relative flex flex-col overflow-hidden rounded-2xl border border-[var(--brand-color)]/15 bg-white shadow-md transition-all duration-500 focus-within:-translate-y-2 focus-within:border-[var(--brand-color)]/40 focus-within:shadow-xl focus-within:shadow-[var(--brand-color)]/20 md:hover:-translate-y-2 md:hover:border-[var(--brand-color)]/40 md:hover:shadow-xl md:hover:shadow-[var(--brand-color)]/15">
       <Link to={`/propiedad/${product.id}`} className="absolute inset-0 z-10">
         <span className="sr-only">Ver detalles de {product.nombre}</span>
       </Link>
@@ -25,12 +25,12 @@ function ProductCard({ product, whatsappHref }) {
         <img
           src={product.imagen}
           alt={product.nombre}
-          className="h-full w-full  object-cover transition-transform duration-700 group-hover:scale-110"
+          className="h-full w-full object-cover transition-transform duration-700 md:group-hover:scale-110"
           loading="lazy"
         />
 
         {/* Dark overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-500 md:group-hover:opacity-100" />
 
         {/* Type badge (Venta/Alquiler) */}
         <span className={`absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full ${badgeColor} px-3 py-1 text-xs font-semibold text-white shadow-md`}>
@@ -45,7 +45,7 @@ function ProductCard({ product, whatsappHref }) {
         </span>
 
         {/* Quick-action overlay */}
-        <div className="absolute bottom-3 left-0 right-0 flex justify-center opacity-0 transition-all duration-500 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0">
+        <div className="absolute bottom-3 left-0 right-0 flex justify-center opacity-0 transition-all duration-500 translate-y-2 md:group-hover:opacity-100 md:group-hover:translate-y-0">
           <span className="rounded-full bg-[var(--brand-color)] px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm shadow-md">
             Ver detalles
           </span>
@@ -54,7 +54,7 @@ function ProductCard({ product, whatsappHref }) {
 
       {/* Content */}
       <div className="flex flex-1 flex-col gap-3 p-4 sm:p-5 relative z-20 pointer-events-none">
-        <h3 className="line-clamp-2 text-base font-bold leading-snug text-slate-900 transition-colors duration-200 group-hover:text-[var(--brand-color)]">
+        <h3 className="line-clamp-2 text-base font-bold leading-snug text-slate-900 transition-colors duration-200 md:group-hover:text-[var(--brand-color)]">
           {product.nombre}
         </h3>
 
