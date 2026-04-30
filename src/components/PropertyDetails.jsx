@@ -95,12 +95,12 @@ export default function PropertyDetails() {
 
                         {/* Thumbnails */}
                         {images.length > 1 && (
-                            <div className="flex w-full gap-2 overflow-x-auto pb-2 hide-scrollbar">
+                            <div className="flex w-auto gap-2 overflow-x-auto pb-2 hide-scrollbar">
                                 {images.map((img, idx) => (
                                     <button
                                         key={idx}
                                         onClick={() => setSelectedImage(img)}
-                                        className={`relative h-20 w-50 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${selectedImage === img
+                                        className={`relative h-20 w-28 shrink-0 overflow-hidden rounded-lg border-2 transition-all ${selectedImage === img
                                             ? 'border-[var(--brand-color)]'
                                             : 'border-transparent opacity-70 hover:opacity-100'
                                             }`}
