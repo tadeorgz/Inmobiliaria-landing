@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Bed, Bath, Home as HomeIcon, MapPin, CheckCircle2 } from 'lucide-react'
-import { courses } from '../data/products'
+import { getPropiedadPublica, getPropiedadesSimilaresPublicas } from '../services/publicPropiedades'
 import { siteConfig } from '../config/siteConfig'
 import { createWhatsAppLink } from '../utils/whatsapp'
 import Footer from './Footer'
@@ -9,20 +9,48 @@ import WhatsAppButton from './WhatsAppButton'
 
 export default function PropertyDetails() {
     const { id } = useParams()
+    const [property, setProperty] = useState(null)
+    const [loading, setLoading] = useState(true)
     const [selectedImage, setSelectedImage] = useState('')
+    const [similarProperties, setSimilarProperties] = useState([])
+
+    // Cargar propiedad publica desde Supabase
+    useEffect(() => {
+        const loadProperty = async () => {
+            setLoading(true)
+            const data = await getPropiedadPublica(id)
+            setProperty(data)
+            if (data) {
+                setSelectedImage(data.imagen)
+            }
+            setLoading(false)
+        }
+        loadProperty()
+    }, [id])
+
+    // Cargar propiedades publicas similares cuando se cargue la propiedad actual
+    useEffect(() => {
+        const loadSimilar = async () => {
+            if (property) {
+                const similar = await getPropiedadesSimilaresPublicas(property.operacion, id, 3)
+                setSimilarProperties(similar)
+            }
+        }
+        loadSimilar()
+    }, [property, id])
 
     // Scroll to top on mount
     useEffect(() => {
         window.scrollTo(0, 0)
     }, [id])
 
-    const property = courses.find((p) => p.id === id)
-
-    useEffect(() => {
-        if (property) {
-            setSelectedImage(property.imagen)
-        }
-    }, [property])
+    if (loading) {
+        return (
+            <div className="flex min-h-screen items-center justify-center bg-slate-50 p-4 text-center">
+                <p className="text-sm font-medium text-slate-600">Cargando propiedad...</p>
+            </div>
+        )
+    }
 
     if (!property) {
         return (
@@ -54,11 +82,6 @@ export default function PropertyDetails() {
     const whatsappHref = createWhatsAppLink(siteConfig.whatsappNumber, whatsappMessage)
 
     const images = [property.imagen, ...(property.imagenesExtras || [])]
-
-    // Encontrar propiedades similares (misma operacion, distinto ID, max 3)
-    const similarProperties = courses
-        .filter((p) => p.operacion === property.operacion && p.id !== property.id)
-        .slice(0, 3)
 
     return (
         <div className="min-h-screen bg-slate-50 font-sans text-slate-800">

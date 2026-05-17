@@ -1,55 +1,75 @@
 ﻿import { useMemo, useState, useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation, Link, Navigate } from 'react-router-dom'
 import AboutUs from './components/AboutUs'
 import CategoryFilter from './components/CategoryFilter'
 import Footer from './components/Footer'
 import Hero from './components/Hero'
 import Navbar from './components/Navbar'
-import { Link } from 'react-router-dom'
 import PropertiesListing from './components/PropertiesListing'
 import QueIncluye from './components/QueIncluye'
 import PropertyDetails from './components/PropertyDetails'
+import ProtectedRoute from './components/ProtectedRoute'
 import { siteConfig } from './config/siteConfig'
-import { courses } from './data/products'
+import AccountPage from './pages/AccountPage'
+import AdminDashboardPage from './pages/AdminDashboardPage'
+import AdminPropiedadFormPage from './pages/AdminPropiedadFormPage'
+import AdminPropiedadesPage from './pages/AdminPropiedadesPage'
+import LoginPage from './pages/LoginPage'
+import { getPropiedadesPublicas } from './services/publicPropiedades'
 import { createWhatsAppLink } from './utils/whatsapp'
 
 function LandingPage() {
+  const [propiedades, setPropiedades] = useState([])
+  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('Todas')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
+
+  // Fetch de propiedades publicas (no requiere sesion)
+  useEffect(() => {
+    const loadPropiedades = async () => {
+      setLoading(true)
+      const data = await getPropiedadesPublicas()
+      setPropiedades(data)
+      setLoading(false)
+    }
+    loadPropiedades()
+  }, [])
 
   const isPropertiesPage = location.pathname === '/propiedades'
 
   const navLinks = isPropertiesPage
     ? [
       { label: 'Volver al inicio', href: '/#propiedades' },
+      { label: 'Admin', href: '/admin' },
       { label: 'Contacto', href: '#contacto' },
     ]
     : [
       { label: 'Inicio', href: '#inicio' },
       { label: 'Propiedades', href: '#propiedades' },
       { label: 'Nosotros', href: '#nosotros' },
+      { label: 'Admin', href: '/admin' },
       { label: 'Contacto', href: '#contacto' },
     ]
 
   const categories = useMemo(
-    () => ['Todas', ...new Set(courses.map((course) => course.tipo))],
-    [],
+    () => ['Todas', ...new Set(propiedades.map((prop) => prop.tipo))],
+    [propiedades],
   )
 
   const filteredProducts = useMemo(() => {
-    return courses.filter((course) => {
+    return propiedades.filter((prop) => {
       const query = search.toLowerCase().trim()
       const matchBySearch =
-        course.nombre.toLowerCase().includes(query) ||
-        course.descripcion.toLowerCase().includes(query) ||
-        course.zona.toLowerCase().includes(query) ||
-        course.tipo.toLowerCase().includes(query)
-      const matchByCategory = selectedCategory === 'Todas' || course.tipo === selectedCategory
+        prop.nombre.toLowerCase().includes(query) ||
+        prop.descripcion.toLowerCase().includes(query) ||
+        prop.zona.toLowerCase().includes(query) ||
+        prop.tipo.toLowerCase().includes(query)
+      const matchByCategory = selectedCategory === 'Todas' || prop.tipo === selectedCategory
       return matchBySearch && matchByCategory
     })
-  }, [search, selectedCategory])
+  }, [search, selectedCategory, propiedades])
 
   const handleSearchChange = (value) => {
     setSearch(value)
@@ -121,7 +141,13 @@ function LandingPage() {
       />
 
       <main>
-        {isPropertiesPage ? (
+        {loading ? (
+          <section className="mx-auto max-w-7xl px-4 pb-12 pt-28 sm:px-6 lg:px-8">
+            <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center shadow-sm">
+              <p className="text-sm font-medium text-slate-600">Cargando propiedades...</p>
+            </div>
+          </section>
+        ) : isPropertiesPage ? (
           <>
             <Hero
               title="Catálogo completo de propiedades"
@@ -226,6 +252,8 @@ function LandingPage() {
         phoneNumber={siteConfig.phoneNumber}
         hours={siteConfig.hours}
       />
+
+
     </>
   )
 }
@@ -243,10 +271,27 @@ function App() {
       className="min-h-screen bg-[var(--bg-soft-color)] text-[var(--text-color)] antialiased"
     >
       <Routes>
+
+        {/* PUBLICAS */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/propiedades" element={<LandingPage />} />
         <Route path="/propiedad/:id" element={<PropertyDetails />} />
-        <Route path="*" element={<LandingPage />} />
+
+        {/* LOGIN */}
+        <Route path="/admin/login" element={<LoginPage />} />
+
+        {/* PRIVADAS */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/propiedades" element={<AdminPropiedadesPage />} />
+          <Route path="/admin/propiedades/nueva" element={<AdminPropiedadFormPage />} />
+          <Route path="/admin/propiedades/:id" element={<AdminPropiedadFormPage />} />
+          <Route path="/admin/cuenta" element={<AccountPage />} />
+          <Route path="/admin/cambiar-password" element={<AccountPage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </div>
   )
