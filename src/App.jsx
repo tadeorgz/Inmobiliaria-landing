@@ -17,6 +17,7 @@ import AdminPropiedadesPage from './pages/AdminPropiedadesPage'
 import LoginPage from './pages/LoginPage'
 import { getPropiedadesPublicas } from './services/publicPropiedades'
 import { createWhatsAppLink } from './utils/whatsapp'
+import { useAuth } from './context/AuthContext'
 
 function LandingPage() {
   const [propiedades, setPropiedades] = useState([])
@@ -38,20 +39,26 @@ function LandingPage() {
   }, [])
 
   const isPropertiesPage = location.pathname === '/propiedades'
+  const { isAuthenticated } = useAuth()
 
-  const navLinks = isPropertiesPage
+  const baseLinks = isPropertiesPage
     ? [
       { label: 'Volver al inicio', href: '/#propiedades' },
-      { label: 'Admin', href: '/admin' },
       { label: 'Contacto', href: '#contacto' },
     ]
     : [
       { label: 'Inicio', href: '#inicio' },
       { label: 'Propiedades', href: '#propiedades' },
       { label: 'Nosotros', href: '#nosotros' },
-      { label: 'Admin', href: '/admin' },
       { label: 'Contacto', href: '#contacto' },
     ]
+
+  // Mostrar el link al panel solo si el usuario está autenticado
+  const navLinks = [...baseLinks]
+  if (isAuthenticated) {
+    // usar label 'Panel' para evitar 'Admin' técnico
+    navLinks.splice(isPropertiesPage ? 2 : 4, 0, { label: 'Panel', href: '/admin' })
+  }
 
   const categories = useMemo(
     () => ['Todas', ...new Set(propiedades.map((prop) => prop.tipo))],
